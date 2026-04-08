@@ -1,120 +1,60 @@
----
-title: Layout-Optima
-emoji: 🎨
-colorFrom: blue
-colorTo: indigo
-sdk: docker
-app_port: 7860
-pinned: false
----
+🚀 Layout Optima
+An autonomous CRO simulation engine that uses intelligent agents to rearrange webpage components for maximum engagement.
 
-# 🎨 Layout-Optima
+🖼️ Project Demo
+Live Demo on Hugging Face
+Watch the agent iterate through layout permutations to find the winning conversion formula.
 
-**AI-Driven UI/UX Layout Optimisation** — Scaler × Meta × HuggingFace Hackathon submission.
+✨ Features
+Agentic UI Refactoring: An autonomous agent analyzes and moves components to find the optimal visual hierarchy.
 
-Simulates CRO (Conversion Rate Optimisation) by letting an agent rearrange webpage
-components to maximise engagement and conversion scores across 3 tasks of increasing
-difficulty.
+Three-Tier Difficulty System: Test optimization strategies across tasks ranging from simple landing pages to complex, multi-element dashboards.
 
----
+Engagement Scoring: Real-time feedback loops based on simulated user behavior and conversion metrics.
 
-## Tasks
+Pure Python Architecture: Streamlined codebase leveraging Python for both the simulation logic and the interactive interface.
 
-| Task | Difficulty | Goal | Score Metric |
-|---|---|---|---|
-| `cta_visibility` | Easy | Move CTA button above the fold (index < 2) | Linear proximity |
-| `content_prioritize` | Medium | Sort sections by descending dwell time | Pearson correlation |
-| `form_friction` | Hard | Place trust signals before friction components | Shielded fraction |
+🛠️ Tech Stack
+Language: Python
 
----
+Framework: [Gradio/Streamlit/FastAPI - depending on your specific implementation]
 
-## Observation Space
+Deployment: Hugging Face Spaces
 
-```json
-{
-  "task_id": "cta_visibility",
-  "task_description": "Move the CTA button above the fold (index < 2)...",
-  "step": 0,
-  "max_steps": 20,
-  "score": 0.2,
-  "components": [
-    {
-      "id": "CTA_BUTTON",
-      "type": "cta",
-      "label": "Sign Up Free",
-      "index": 5,
-      "dwell_time": 1.1,
-      "click_count": 22,
-      "conversion_rate": 0.41,
-      "scroll_depth": 0.15
-    }
-  ],
-  "heatmap_summary": {
-    "top_dwell_time": [...],
-    "friction_points": [...],
-    "trust_signals": [...],
-    "cta_components": [...]
-  },
-  "available_actions": ["move_component", "change_color", "remove_component"]
-}
-```
+⚙️ Installation & Setup
+Get layout-optima running locally in seconds.
 
-## Action Space
+1. Clone the Repository
+Bash
+git clone https://github.com/your-username/layout-optima.git
+cd layout-optima
+2. Install Dependencies
+Ensure you have Python 3.9+ installed.
 
-```json
-{"type": "move_component",  "id": "<component_id>", "new_index": 1}
-{"type": "change_color",    "id": "<component_id>", "hex": "#FF5733"}
-{"type": "remove_component","id": "<component_id>"}
-```
+Bash
+pip install -r requirements.txt
+3. Run the App
+Bash
+python app.py
+🚀 Usage
+Once the application is running, select a difficulty level and initialize the agent:
 
-## Reward
+Select Task: Choose between Easy, Medium, or Hard difficulty.
 
-| Event | Reward |
-|---|---|
-| Score improvement (delta) | `delta + 0.05` |
-| No improvement | `delta` (≤ 0) |
-| Task solved (score ≥ 1.0) | `+0.5` bonus |
-| Invalid action | `-0.02` |
-| No-op | `-0.01` |
+Run Simulation: Click "Optimize" to watch the agent rearrange components.
 
----
+Analyze: Review the conversion score delta between the original and optimized layout.
 
-## HTTP API (OpenEnv spec)
+Python
+# Example of programmatically triggering the optimizer
+from layout_optima import Agent
 
-| Method | Path | Description |
-|---|---|---|
-| `GET` | `/health` | Health check — returns 200 |
-| `GET` | `/tasks` | List all task ids |
-| `POST` | `/reset` | Start new episode `{"task_id":"cta_visibility"}` |
-| `POST` | `/step` | Execute action `{"task_id":"...", "action":{...}}` |
-| `GET` | `/state?task_id=...` | Episode metadata |
+agent = Agent(task_level="hard")
+optimized_layout = agent.run_simulation(iterations=50)
+print(f"Optimized Score: {optimized_layout.score}")
+🗺️ Roadmap
+Custom Reward Functions: Allow users to define what "engagement" means for their specific use case.
 
----
+Vision-Language Integration: Incorporate multimodal models to "see" the UI while rearranging.
 
-## Environment Variables
-
-| Variable | Description |
-|---|---|
-| `API_BASE_URL` | LLM API endpoint (OpenAI-compatible) |
-| `MODEL_NAME` | Model identifier for inference |
-| `HF_TOKEN` | Hugging Face / API key |
-
----
-
-## Run Locally
-
-$env:ENV_BASE_URL = "https://tanishagupta30-layout-optima.hf.space"
->> python inference.py
-
-## File Structure
-
-```
-├── app.py            # FastAPI + Gradio server (OpenEnv endpoints + web UI)
-├── env.py            # LayoutOptimaEnv — reset/step/state/grade logic
-├── inference.py      # Inference runner with [START]/[STEP]/[END] logs
-├── tasks.py          # Component dataclass + 3 task definitions
-├── openenv.yaml      # OpenEnv spec manifest
-├── requirements.txt  # Python dependencies
-├── Dockerfile        # Container definition
-└── README.md         # This file
-```
+Exportable Layouts: Download optimized configurations as ready-to-use CSS/HTML code.
