@@ -1,0 +1,60 @@
+name: layout-optima
+version: "1.0.0"
+description: "AI-driven UI/UX layout optimisation RL environment. Agents rearrange webpage components to maximise engagement and conversion rates."
+author: TanishaGupta30
+license: MIT
+
+environment:
+  type: http
+  base_url: "https://tanishagupta30-layout-optima.hf.space"
+  health_endpoint: /health
+
+tasks:
+  - id: cta_visibility
+    description: "Move CTA button above the fold to maximise click-through"
+    difficulty: easy
+    reward_range: [0.0, 1.0]
+  - id: trust_building
+    description: "Place trust signals (testimonials) before CTA to improve conversion"
+    difficulty: medium
+    reward_range: [0.0, 1.0]
+  - id: full_funnel
+    description: "Optimise full page layout for end-to-end funnel conversion"
+    difficulty: hard
+    reward_range: [0.0, 1.0]
+
+action_space:
+  type: object
+  properties:
+    type:
+      type: string
+      enum: [move_component]
+    id:
+      type: string
+      description: "Component ID to move"
+    new_index:
+      type: integer
+      description: "Target position in layout (0 = top)"
+
+observation_space:
+  type: object
+  properties:
+    task_id:
+      type: string
+    components:
+      type: array
+    score:
+      type: number
+      minimum: 0.0
+      maximum: 1.0
+    step:
+      type: integer
+    done:
+      type: boolean
+
+endpoints:
+  reset: POST /reset
+  step: POST /step
+  state: GET /state
+  tasks: GET /tasks
+  health: GET /health
